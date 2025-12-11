@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dom1</title>
+    <script defer src="31.dom1.js"></script>
+    <!-- defer: 지연로딩, body안에 있는 거 먼저 로딩하고 script 실행 
+     / 이거 안하면 body의 내용이 로딩이 안됐는데 js실행됨 -> error
+     / defer 안할거면 body의 맨 밑에 작성 -->
+</head>
+<body>
+    <!-- 
+    div의 자식은 3개? no
+    눈에 보이지 않는 엔터, 탭들도 포함되어 있음
+    -->
+    <div id="parent">
+        <p class="child">첫번째 문장</p>
+        <p class="child">두번째 문장</p>
+        <p class="child">세번째 문장</p>
+    </div>
+
+    <button id="testBtn">테스트</button>
+    
+</body>
+</html>
