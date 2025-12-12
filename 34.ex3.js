@@ -38,20 +38,18 @@ function shuffleArray(array) {
   7) 연산결과를 텍스트상자에 표시
 */
 
+
+
+
 //선택한 정수들을 저장할 배열(전역)
-const globalSelectedArr = [];
-//합계 버튼과 결과표시 텍스트상자를 동적으로 생성하여 화면에 표시
-const sumBtn = document.createElement('button');
-sumBtn.textContent = '합계 구하기';
-const input = document.createElement('input');
+let globalSelectedArr = [];
 
 // 100까지 정수 배열에 저장해서 섞는 함수
 const makeArr = () => {
+  
   const hundredArr = [];
 
-  for(let i=0; i<100; i++) {
-    hundredArr[i] = i;
-  }
+  for(let i=1; i<=100; i++) hundredArr.push(i);
 
   return shuffleArray(hundredArr);
   
@@ -61,24 +59,6 @@ const makeArr = () => {
 // 동적으로 테이블을 생성하여 화면에 표시
 
 const makeTable = () => {
-
-  /*
-  const table = document.createElement('table');
-  const tbody = document.createElement('tbody');
-  document.querySelector("body").append(table);
-
-  for(let i=0; i<10; i++) {
-    const tr = document.createElement('tr');
-    for(let j=0; j<10; j++) {
-      const td = document.createElement('td');
-      td.textContent = `${arrList[i * 10 + j]}`;
-      tr.append(td);
-    }
-    tbody.append(tr);
-  }
-  table.append(tbody);
-
-  */
 
   const arrList = makeArr();
 
@@ -91,18 +71,38 @@ const makeTable = () => {
     html += `</tr>`;
   }
   html += `</tbody></table>`;
-  document.querySelector("body").innerHTML = html;
+
+  //하단 html 생성
+  let bottomHtml = '<p><button id="add">합계<button id="sub">지우기</button>&nbsp;<input type="text"></p>';
+
+  //body에 생성한 HTML 추가
+  document.querySelector('body').innerHTML = html + bottomHtml;
 
 
-  // td마다 클릭이벤트리스너 연동
-  [...document.querySelectorAll('td')].forEach(td => {
-    td.addEventListener('click', e => tdSum(e));
+  // td마다 클릭이벤트리스너 연동 
+  // ***************이벤트 위임 가능******************************
+  // table로
+  document.querySelector('table').addEventListener('click', e => {
+    // 클릭한거 스타일 변경
+    e.target.style.backgroundColor = 'red';
+    e.target.style.color = 'white';
+
+    // 선택한 번호를 정수로 가져오기
+    const selNum = parseInt(e.target.textContent);
+    tdSum(selNum);
   });
-};
+
+}
+
+
+makeTable();
 
 // 클릭한 td 합 저장하는 함수
 const tdSum = e => {
-  globalSelectedArr.push(e.target.textContent);
+  // if(globalSelectedArr.indexOf(e)<0) : 선택번호 저장 배열에 번호가 없다면
+  if(globalSelectedArr.includes(e)) {
+    alert('이미 입력한 번호입니다. 다른 번호를 눌러주세요!');
+  }else globalSelectedArr.push(e);
 };
 
 //배열에 있는 숫자들의 합을 연산하는 함수
@@ -110,115 +110,21 @@ const calcSum = () => {
   return globalSelectedArr.reduce((acc, curr) => +acc + +curr, 0);
 };
 
-
-input.addEventListener('focus', e => {
-  input.blur();
-  alert('입력할 수 없습니다!');
-});
-
-sumBtn.addEventListener('click', e => {
+//합계 버튼과 결과표시 텍스트상자를 동적으로 생성하여 화면에 표시
+document.querySelector('button#add').addEventListener('click', e => {
   if(globalSelectedArr.length < 2) {
     e.preventDefault();
     alert(`2개 이상 눌러주세요! 현재 입력 개수 : ${globalSelectedArr.length}`);
-  } else input.value = calcSum();
-})
+  } else document.querySelector('input').value = calcSum();
+});
 
-makeTable();
-
-
-
-document.querySelector('body').append(input);
-document.querySelector('body').append(sumBtn);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-// 10행 10열의 테이블을 만들고
-const table = document.createElement('table');
-document.querySelector("body").append(table);
-
-// 1~100의 수 중 임의의 수
-// const ranNum = () => {
-//   return Math.floor(Math.random() * 100) + 1;
-// };
-
-
-// 테이블 만들고 이벤트리스너 심어줌
-// 1부터 100까지 넣음 (count로 세줌)
-const render = () => {
-  let count = 1;
-  for(let i=0; i<10; i++) {
-    table.innerHTML += `
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-        <td class=randomBtn>${count++}</td>
-    `;
+document.querySelector('button#sub').addEventListener('click', e => {
+  if(globalSelectedArr.length == 0) {
+    e.preventDefault();
+    alert(`다 제거했습니다!`);
+  } else {
+    // globalSelectedArr.pop();
+    console.log(globalSelectedArr.pop());
+    // pop한 번호와 일치하는 td를 가져와서 색상 변경하기
   }
-
-  // 요소마다 클릭 이벤트리스너 생성
-  [...document.querySelectorAll('td')].forEach(td => {
-    td.addEventListener('click', e => console.log(e.target.textContent));
-  });
-
-
-};
-
-
-render();
-
-*/
+});
