@@ -30,8 +30,6 @@ $('button').click(e => {
             break;
             case '데이터가져오기':
                 renderData();
-                
-                
             }
         })
         
@@ -47,65 +45,27 @@ $('button').click(e => {
         axios.get('http://localhost:7777/studentscore') // 가져올 데이터
             .then(resp => {
                 const studentArr = resp.data;
-                // header
-                // const header = Object.keys(studentArr[0]);
 
+                // header
                 $('thead').html('<tr><th>아이디</th><th>이름</th><th>국어</th><th>영어</th><th>수학</th></tr>');
 
 
                 let tableHTML = '';
                 // 데이터 받아오기
                 // 아이디, 이름, 성적이 담긴 배열
-                const studentsScore = studentArr.map(student => Object.values(student));
-                // console.log(studentsScore);
+                const studentScore = studentArr.map( student => {
+                    const {id, name, score: {kor, math, eng}} = student;
+                    return [id, name, kor, math, eng];
+                });
 
-                //---------------------------------------------------------------------------------------------------------------
-                // filter함수
-                // console.log(...studentArr);
-                // student의 values가 object가 아닌 것들 먼저 담기
-                // 그다음에 아닌 것들 담고
-                // [,]로 이어주기
-
-                studentsScore.forEach(student => {
-                    // console.log(student);
+                studentScore.forEach(student => {
                     tableHTML += '<tr>';
-
-
-                    // 객체인 것과 아닌 것을 다르게 표시해줘야함
-                    student.forEach(td => {
-                        tableHTML += `<td>${td}</td>`
-                        if((typeof td) == 'object'){
-                            // td.forEach(obj => tableHTML += `<td>${Object.values(obj)}</td>`);
-                            // console.log(td);
-                        }
-                    });
-
+                    student.forEach(td => tableHTML += `<td>${td}</td>`);
                     tableHTML += '</tr>';
                 });
 
                 $('tbody').html('');
                 $('tbody').html(tableHTML);
-
-                // studentsScore을 돌면서 (map) isObject라면 그 요소 pop하고 그 요소의 values를 추가해줌
-                // const valuesArr = studentsScore.map(student => {
-                //     student.map(s => {
-                //         if((typeof s) == 'object') {
-                //             const scores = s;
-                //             student.pop(s);
-                //             student.push(...Object.values(scores));
-                //         }
-                //     });
-                // }); // id, name
-
-
-                // ****중첩 객체 때문에 오류 -> 풀어서 평탄화 시켜야함
-                // studentArr 돌면서 student마다 value 꺼내서 테이블에 추가
-                // studentsScore.forEach(student => {
-                //     tableHTML += '<tr>';
-                //     student.forEach(td => {tableHTML += `<td>${td}</td>`});
-                //     tableHTML += '</tr>';
-                // })
-                // studentsScore.forEach(st => console.log(st));
             })
             .catch(err => {
                 alert('요청 에러 발생!');
@@ -113,7 +73,35 @@ $('button').click(e => {
 }
 
 const putData = () => {
-    // console.log('입력된 데이터 post');
+    // - 데이터 등록하기
+    // input의 값들(getText) 배열로 저장해두기.
+    // putData(input에 입력된 값 배열)에서 post 실행
+    // post의 입력값에 넣어주기
+    // post에 보낸다음에 다시 렌더링
+    // const inputs = $('input');
+    const inputArr = document.querySelectorAll('input');
+    // const inputValues = Array.from(inputArr).map(i => i.value);
+
+    console.log({id, name, score});
+    // const {id, name, ...score} = inputs.textContent;
+    
+    // console.log([id, name, score]);
+
+    // 정규식 검사
+
+    
+    // axios.post(
+    //     'http://localhost:7777/studentscore',
+    //     {
+    //         "id" : 5
+    //     })
+    //     .then(function (response) {
+    //       console.log(response);
+    //     })
+    //     .catch(function (error) {
+    //       alert('요청 에러 발생!');
+    //     });
+
     renderData();
 }
 
