@@ -28,6 +28,12 @@
 // post의 입력값에 넣어주기
 // post에 보낸다음에 다시 렌더링
 
+// 4. 데이터가져오기 버튼 옆에 '과목별총점' 버튼 추가하고 
+const subjectSumBtn = $('<button></button>').text('과목별총점');
+$('p').last().append(subjectSumBtn);
+
+let isTotal = false; //과목별 총점 눌렀을 때 처리할 플래그
+
 // 버튼 이벤트 리스너
 $('button').click(e => {
     switch(e.target.textContent) {
@@ -46,7 +52,10 @@ $('button').click(e => {
 
             break;
 
-        case '데이터가져오기': renderData();
+        case '데이터가져오기': renderData(); break;
+        case '과목별총점' : 
+            isTotal = true;
+            renderData();
     }
 })
         
@@ -98,41 +107,89 @@ async function putData(inputValues) {
     renderData();
 }
 
+
 const createTable = studentArr => {
+    // 3. 학생별 총점/평균 열 추가
 
     // header
-    $('thead').html('<tr><th>아이디</th><th>이름</th><th>국어</th><th>영어</th><th>수학</th><th>총점</th><th>평균</th></tr>');
+    $('thead').html('<tr><th>아이디</th><th>이름</th><th>국어</th><th>수학</th><th>영어</th><th>총점</th><th>평균</th><th></th></tr></tr>');
 
     let tableHTML = '';
     // 데이터 받아오기 -> 중첩 객체 to 1차원 배열
-    const studentScore = studentArr.map( student => {
+    const studentInfo = studentArr.map( student => {
         const {id, name, score: {kor, math, eng}} = student;
 
         //총점, 평균 구하기
-        const scoreCnt = Object.values(student.score).length; // 점수들의 개수
+        const scoreCnt = Object.values(student.score).length; // 점수의 개수
         const sum = [kor, math, eng].reduce((acc, curr) => acc+curr); // 위에 구조분해할당으로 받은 값
         const avg = (sum/scoreCnt).toFixed(2);
 
         return [id, name, kor, math, eng, sum, avg]; // 아이디, 이름, 성적, 총점, 평균이 담긴 배열
     });
-    
+
     // 테이블에 출력
-    studentScore.forEach(student => {
+    studentInfo.forEach(student => {
         tableHTML += '<tr>';
         student.forEach(td => {
             tableHTML += `<td>${td}</td>`
         });
-        tableHTML += '</tr>';
+        tableHTML += '<td><button class="delete">삭제</button></td></tr>';
+
     });
     $('tbody').html(tableHTML);
 
+    
+
+const deleteBtn = $('button.delete');
+console.log(deleteBtn.parent().siblings());
+(Array.from(deleteBtn)).forEach(element => {
+    console.log(element.parentElement.parentElement); // 각 줄의 tr
+})
+
+
+
+    if(isTotal) {
+        // 과목별 총점 클릭하면**********
+        //**이 세개를 한 번에 하는 방법은 없을까?
+        const korTotal = studentArr.map(student => student.score.kor).reduce((acc,curr) => acc+curr);
+        const mathTotal = studentArr.map(student => student.score.math).reduce((acc,curr) => acc+curr);
+        const engTotal = studentArr.map(student => student.score.eng).reduce((acc,curr) => acc+curr);
+        
+        $('tfoot').html(`<tr><th colspan="2">총점</th><td>${korTotal}</td><td>${mathTotal}</td><td>${engTotal}</td><th colspan="2"></th></tr>`);
+        
+    }
+};
+
+async function deleteStudent(inputValues) {
+    //1차원 배열 to 중첩 객체 **함수로 만들기
+    // const [id, name, kor, math, eng] = inputValues;
+
+    // const newData = {
+    //     id,
+    //     name,
+    //     score: {
+    //         kor,
+    //         math,
+    //         eng
+    //     }
+    // };
+
+    // const url = 'http://localhost:7777/studentscore';
+    // await fetch( // post할 동안 다른 작업 일시 중단
+    //     url,
+    //     {
+    //         method: 'DELETE',
+    //         headers: { 'content-type': 'application/json' },
+    //         body: JSON.stringify(newData)
+    //     }
+    // );
+
+    // renderData();
+    console.log('삭제 버튼 눌렀음!');
 };
 
 
 // [3~6 주말과제 : 일요일 오후 12시까지 '이름_rest.zip' 제출]
-// 3. 학생별 총점/평균 열 추가
-// 4. 데이터가져오기 버튼 옆에 '과목별총점' 버튼 추가하고 누르면 과목별 총점 행 추가
-const subjectSumBtn = $('<button></button>').text('과목별총점');
-$('p').last().append(subjectSumBtn);
+
 // 5. 각 학생의 국어/영어/수학 점수 수정 기능 추가
 // 6. 각 학생 데이터 삭제 기능
