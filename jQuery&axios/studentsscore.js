@@ -32,32 +32,43 @@
 const subjectSumBtn = $('<button></button>').text('과목별총점');
 $('p').last().append(subjectSumBtn);
 
+// 수정 버튼 : 입력값 누르고 수정.
+const editBtn = $('<button></button>').text('수정완료');
+$('p').first().append(editBtn);
+
 let isTotal = false; //과목별 총점 눌렀을 때 처리할 플래그
 
 // 버튼 이벤트 리스너
 $('button').click(e => {
     switch(e.target.textContent) {
-        case '등록':
-            const inputs = document.getElementsByTagName('input');
-            const inputValues = Array.from(inputs).map(input => {
-                if(input.hasAttribute('class')) return parseInt(input.value); //score이면 숫자로 변환
-                else return input.value;
-            })
-
-            //유효성 검사
-            // input 형식이 모두 맞아야만 post
+        case '등록':    
+            //유효성 검사 : input 형식이 모두 맞아야만 post
+            const inputValues = getInputValues();
             const inputCheck = validTest(inputValues); // 형식이 모두 맞아야만 true반환
             if(!inputCheck) alert('형식에 맞춰 작성해주세요!');
             else putData(inputValues); // inputValues: post할 데이터
-
             break;
 
         case '데이터가져오기': renderData(); break;
+
         case '과목별총점' : 
             isTotal = true;
             renderData();
+            break;
+        case '수정완료': 
+            editComplete();
     }
 })
+
+// input에 입력한 값을 배열로 반환하는 함수
+const getInputValues = () => {
+    const inputs = document.getElementsByTagName('input');
+    const inputArr = Array.from(inputs).map(input => {
+        if(input.hasAttribute('class')) return parseInt(input.value); //score이면 숫자로 변환
+        else return input.value;
+    });
+    return inputArr;
+};
         
     
 //유효성 검사
@@ -70,8 +81,8 @@ const validTest = (inputValues) => {
 
     return check; //input의 유효성이 전부 맞으면 true 반환
 };
-    
-// console.log('데이터 get하고 테이블에 출력');
+
+// 데이터 가져와서 테이블에 렌더링
 async function renderData() {
     const url = 'http://localhost:7777/studentscore';
     const response = await fetch(url);
@@ -79,8 +90,8 @@ async function renderData() {
     createTable(post);
 }
 
+// - 데이터 등록하기
 async function putData(inputValues) {
-    // - 데이터 등록하기
 
     //1차원 배열 to 중첩 객체
     const [id, name, kor, math, eng] = inputValues;
@@ -127,24 +138,34 @@ const createTable = studentArr => {
         return [id, name, kor, math, eng, sum, avg]; // 아이디, 이름, 성적, 총점, 평균이 담긴 배열
     });
 
-    // 테이블에 출력
-    studentInfo.forEach(student => {
-        tableHTML += '<tr>';
+    document.querySelector('tbody').innerHTML='';
+    studentInfo.forEach((student, idx) => {
+        const tr = document.createElement('tr');
+
         student.forEach(td => {
-            tableHTML += `<td>${td}</td>`
+            const cell = document.createElement('td');
+            cell.textContent = td;
+            tr.appendChild(cell);
         });
-        tableHTML += '<td><button class="delete">삭제</button></td></tr>';
 
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '삭제';
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '수정';
+        // idx번 삭제를 누르면 deleteStudent(newStudentArr)를 실행해서 무엇을 지울지 정보를 보내줌
+        delBtn.addEventListener('click', e => {
+            deleteStudent(student[0]); // 삭제할 학생의 아이디값
+        })
+
+        editBtn.addEventListener('click', e => {
+            editInfo(student.slice(0, -2));
+        })
+
+        tr.appendChild(delBtn);
+        tr.appendChild(editBtn);
+        document.querySelector('tbody').append(tr);
     });
-    $('tbody').html(tableHTML);
-
-    
-
-const deleteBtn = $('button.delete');
-console.log(deleteBtn.parent().siblings());
-(Array.from(deleteBtn)).forEach(element => {
-    console.log(element.parentElement.parentElement); // 각 줄의 tr
-})
 
 
 
@@ -160,36 +181,60 @@ console.log(deleteBtn.parent().siblings());
     }
 };
 
-async function deleteStudent(inputValues) {
-    //1차원 배열 to 중첩 객체 **함수로 만들기
-    // const [id, name, kor, math, eng] = inputValues;
-
-    // const newData = {
-    //     id,
-    //     name,
-    //     score: {
-    //         kor,
-    //         math,
-    //         eng
-    //     }
-    // };
-
-    // const url = 'http://localhost:7777/studentscore';
-    // await fetch( // post할 동안 다른 작업 일시 중단
-    //     url,
-    //     {
-    //         method: 'DELETE',
-    //         headers: { 'content-type': 'application/json' },
-    //         body: JSON.stringify(newData)
-    //     }
-    // );
-
-    // renderData();
-    console.log('삭제 버튼 눌렀음!');
+// 6. 각 학생 데이터 삭제 기능
+async function deleteStudent(id) {
+    // id값에 접근해서 삭제
+    const url = `http://localhost:7777/studentscore/${id}`;
+    await fetch(
+        url,
+        {method: 'DELETE'}
+    );
+    renderData();
 };
+
+
+// 수정
+async function editInfo(clickedStudent) {
+    const inputList = document.querySelectorAll('input');
+
+    inputList.forEach( (ele, index) => {
+        ele.value = clickedStudent[index];
+    });
+}
+
+//수정 완료 editComplete
+async function editComplete() {
+    const [id, name, kor, math, eng] = getInputValues();
+
+    const newData = {
+        id,
+        name,
+        score: {
+            kor,
+            math,
+            eng
+        }
+    };
+
+    // patch
+    const url = `http://localhost:7777/studentscore/${id}`;
+    await fetch(
+        url,
+        {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(newData)
+        }
+    );
+
+    renderData();
+}
+
 
 
 // [3~6 주말과제 : 일요일 오후 12시까지 '이름_rest.zip' 제출]
 
 // 5. 각 학생의 국어/영어/수학 점수 수정 기능 추가
-// 6. 각 학생 데이터 삭제 기능
+// 삭제 버튼 옆에 수정 버튼
+// 수정 누르면 학생의 id랑 이름 값을 input.value에 넣어줌
+// 수정 완료 버튼 누르면 patch해줌
