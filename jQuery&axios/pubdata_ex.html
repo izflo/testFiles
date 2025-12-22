@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pubdata_ex</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script defer src="pubdata_ex.js"></script>
+    <style>
+        table, th, td { width: 800px; border: 1px solid #333; border-collapse: collapse; }
+        table { margin: 0 auto; }
+        th, td { text-align: center; padding: 5px 10px; }
+        thead { background-color: #333; color: #fff; }
+        h1 { font-size: 1.5em; font-weight: bold; text-align:  center; }
+        p { width: 800px; text-align: center; margin: 20px auto; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>테이블제목</h1>
+        <p>
+            <select id="searchSel"></select>&nbsp;
+            <input type="text" id="searchKeyword">&nbsp;
+            <button id="searchBtn">검색</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <select id="sortSel"></select>&nbsp;
+            <button id="ascBtn">ASC</button>&nbsp;
+            <button id="descBtn">DESC</button>
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</body>
+</html>
