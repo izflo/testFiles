@@ -16,14 +16,31 @@ fetch('http://openapi.seoul.go.kr:8088/6b6f537a48697a6c34387764455247/json/bikeL
             '자전거주차총건수' : 'parkingBikeTotCnt',
             '거치율' : 'shared'
         }
-        const bicycleList = bicycleObj.map(bcc => {
-            return Object.values(theadList).map(val => bcc[val])
+
+        // sortSel을 theadList로 만들기
+        const sortSel = document.querySelector('#sortSel');
+        Object.keys(theadList).forEach(opt => {
+            const sortOpt = document.createElement('option');
+            sortOpt.value = theadList[opt];
+            sortOpt.textContent = opt;
+            sortSel.appendChild(sortOpt);
         });
+
+        // 객체를 배열로 변환, 이름 변경
+        const bicycleList = bicycleObj.map(bcc => {
+            return Object.values(theadList).map((val) => {
+                if(val == 'stationName') {
+                    return bcc[val].split('.')[1].trim();
+                }
+                else return bcc[val];
+            })
+        });
+
         const tbody = document.querySelector('tbody');
         document.querySelector('h1').textContent = '서울시 공공자전거 실시간 대여정보'; // 테이블 제목 설정
         
-        currentObj = {}; // 검색 후 정렬할 때 현재 정렬되어 있는 객체를 넘겨주기 위해
-
+        currentArr = []; // 검색 후 정렬할 때 현재 정렬되어 있는 배열을 넘겨주기 위해
+        let isAsc = true;
         
         document.querySelectorAll('button').forEach( btn => {
             btn.addEventListener('click', e => {
@@ -33,11 +50,13 @@ fetch('http://openapi.seoul.go.kr:8088/6b6f537a48697a6c34387764455247/json/bikeL
                     break;
         
                 case 'ASC':
-                    setTable(currentObj, 'asc');
+                    isAsc = true;
+                    setTable(currentArr);
                     break;
                 
                 case 'DESC':
-                    setTable(currentObj, 'desc');
+                    isAsc = false;
+                    setTable(currentArr);
             }
             });
         })
@@ -52,17 +71,19 @@ fetch('http://openapi.seoul.go.kr:8088/6b6f537a48697a6c34387764455247/json/bikeL
             }
 
             // 대여소 이름 list 가져와서 배열 만들기
-            const stationList = bicycleList.map(bicycle => bicycle.stationName.split('.')[1].trim());
-                    
-            // 배열 내에서 찾기 : station에 keyword가 포함된 배열
-            const searchList = stationList.filter(station =>station.includes(keyword));
+            
+            // 'stationName' : '0', 
+            // 'rackTotCnt' : '1', 
+            // 'parkingBikeTotCnt' : '2',
+            // 'shared' : '3'
+            // // 배열 내에서 찾기 : station에 keyword가 포함된 배열
+            // bicycle은 배열이니까 stationName에 해당하는 배열 인덱스값
+            const stationList = bicycleList.filter(bicycle => bicycle[Object.values(theadList).indexOf('stationName')].includes(keyword));
+            
+            console.log(stationList)
         
-            // 그 항목만 테이블에 렌더링하기
-            // searchList를 돌면서 이 값을 포함하는 객체를 리턴해야함
-            const foundObj = bicycleList.filter(obj => obj.stationName.includes(String(keyword)));
-            //객체를 배열로 만들어주는 함수, 그거 먼저 진행하고 ascend인지 desc인지 확인 후 settable
-            setTable(foundObj);
-            currentObj = foundObj; 
+            // // 그 항목만 테이블에 렌더링
+            setTable(stationList);
         }
         
         // thead 재설정
@@ -75,7 +96,6 @@ fetch('http://openapi.seoul.go.kr:8088/6b6f537a48697a6c34387764455247/json/bikeL
                 const th = document.createElement('th');
                 th.textContent = item;
                 tr.appendChild(th);
-            
             });
             thead.appendChild(tr);
         };
@@ -84,47 +104,34 @@ fetch('http://openapi.seoul.go.kr:8088/6b6f537a48697a6c34387764455247/json/bikeL
         
         // 테이블 추가
         // 객체가 아니라 리스트로 받아야겠다
-        const setTable = (objList, sort) => {
-            // sort=='asc' ? objList.sort((a, b) =>((a).localeCompare(b))) : objList.sort((a, b) =>((b).localeCompare(a)));
+        const setTable = (objList) => {
+            currentArr = objList;
+            // 'stationName' : '0', 
+            // 'rackTotCnt' : '1', 
+            // 'parkingBikeTotCnt' : '2',
+            // 'shared' : '3'
+
+            // 여기서 sortSel.val을 가져와서 그에 따라 정렬
+            const selectedSort = sortSel.value;
+            const selectedNum = Object.values(theadList).indexOf(selectedSort); // indexOf = 배열에서 selectedSort의 순서
+            if(selectedSort == 'stationName')
+                isAsc ? objList.sort((a, b) =>((a[selectedNum]).localeCompare(b[selectedNum]))) : objList.sort((a, b) =>((b[selectedNum]).localeCompare(a[selectedNum])));
+            isAsc ? objList.sort((a, b) =>(a[selectedNum]-b[selectedNum])) : objList.sort((a, b) =>(b[selectedNum]-a[selectedNum]));
             
-            tbody.innerHTML='';      
-            // bicycleList는 객체들을 모아놓은 배열
-            // objList.forEach(bcl => {
-            //     const tr = document.createElement('tr');
-                
-            //     Object.values(theadList).forEach(val => {
-            //         if(val == 'stationName') {
-            //             td.textContent = bcl[val].split('.')[1].trim();
-            //         }
-            //         else td.textContent= bcl[val];
-            //         tr.appendChild(td);
-            //     })
-        
-            //     tbody.appendChild(tr);
-            // });
+            tbody.innerHTML='';
 
             objList.forEach(trItem => {
                 const tr = document.createElement('tr');
 
                 trItem.forEach((tdItem, idx) => {
                     const td = document.createElement('td');
-                    if(idx==0) {
-                        td.textContent = tdItem.split('.')[1].trim();
-                    } else {
-                        td.textContent = tdItem;
-                    }
+                    td.textContent = tdItem;
                     tr.appendChild(td);
                 })
-
                 tbody.appendChild(tr);
-
             })
-                    
         }
-        
         
         setThead();
         setTable(bicycleList);
-        currentObj = bicycleList;
-
 });
