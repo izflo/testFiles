@@ -12,11 +12,11 @@ public class Variable1 {
 		// 실수는 정확한 값을 표현하지 못함. 그래서 float, double 확실히 구분해줘야함
 		float f = 3.14f; // 4바이트 부호화 실수(부동소수), 부호비트1, 지수비트8, 가수비트23
 		double d = 2.1; // 8바이트 부호화 실수(부동소수), 부호비트1, 지수비트11, 가수비트52
-		char c = 'A'; // 2바이트 유니코드
+		char c = 'A'; // 2바이트 유니코드, 부호가 없는 정수여서 0~2^16까지, 1바이트=ascii코드
 		boolean bool = true; // 1바이트, true/false
 		
 		// 표현범위의 크기
-		// double > float > long > int > short > byte
+		// double > float > long > int > c > short > byte
 		
 		// 정수타입의 기본타입 : int
 		// 325라는 정수는 int
@@ -26,3 +26,4 @@ public class Variable1 {
 		
 	}
 }
+
