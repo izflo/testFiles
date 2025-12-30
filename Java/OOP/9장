@@ -1,0 +1,99 @@
+- 상위로 갈수록 설계, 추상, 공통 / 하위로 갈수록 구현, 구체, 개별
+
+-----
+
+    // 상위타입 객체참조변수에 하위타입 객체참조값을 할당
+		// => 하위타입들을 상위타입으로 "타입 일원화" 가능***
+		Parent child = new Child();
+		
+		// 모든 객체참조는 Object 객체참조변수에 저장 가능
+		// child2는 Parent의 변수,메소드가 없음
+		Object child2 = new Child();
+		
+		// 상위타입인 Parent의 private이 아닌 멤버변수를 하위타입에서 상속받음
+		System.out.println(child.si);
+		System.out.println(child.nsi);
+		
+		 // 상위타입인 Parent의 private이 아닌 멤버메서드를 하위타입에서 상속 받음
+	      child.sm();
+	      child.nsm();
+
+-----
+
+public class Parent /*extends Object 생략*/ {
+
+}
+
+-----
+
+- @Override : 오버라이딩한 메소드인지 컴파일타임에 검증하는 어노테이션(annotation)
+
+-----
+
+		// 아래 v1, v2, v3 변수는 모두 Vehicle 타입이나 가지고 있는 참조는 모두 다름
+		// => 다형성 : 동일한 형태인데 다른 성질을 가짐
+    
+		// 오버라이딩의 목적
+		// 상위타입 객체참조변수에 하위타입 객체참조값을 저장하면
+		// 하위타입들을 하나의 상위타입으로 "타입 일원화" 할 수 있음
+		
+		// v1 변수는 Vehicle타입, 가지고 있는 참조는 Vehicle참조
+		Vehicle v1 = new Vehicle("탈것", false);
+		System.out.println(v1); //Vehicle의 toString호출
+		
+		// v2 변수는 Vehicle타입, 가지고 있는 참조는 Bus참조
+		Vehicle v2 = new Bus(true, 25);
+		System.out.println(v2); //Bus의 toString호출
+				
+		// v3 변수는 Vehicle타입, 가지고 있는 참조는 Bicycle참조
+		Vehicle v3 = new Bicycle(true, false);
+		System.out.println(v3); //Vehicle의 toString호출
+
+
+-----
+    // 실습
+		// name이 Bus1~Bus1000인 1000개의 Bus객체를 생성
+		// name이 Bicycle1~Bicycle1000인 1000개의 Bicycle객체를 생성
+		// name이 Airplane1~Airplane1000인 1000개의 Airplane객체를 생성
+		// 생성된 3000개의 객체의 이름을 출력
+
+		Vehicle[][] v = new Vehicle[3][1000];
+
+		for (int i = 0; i < 1000; i++) {
+			v[0][i] = new Bus("Bus" + (i + 1));
+			v[1][i] = new Bicycle("Bicycle" + (i + 1));
+			v[2][i] = new Airplane("Airplane" + (i + 1));
+		}
+
+		for (Vehicle[] va : v) {
+			for (Vehicle vi : va) {
+				System.out.println(vi.getName());
+			}
+		}
+		
+    // better code
+    // Bus, Bicycle, Airplane 모두 Vehicle 타입이다! 상위타입으로 일원화!***
+    int cnt = 3000;
+    Vehicle[] vArr = new Vehicle[cnt];
+    for (int i=0; i<cnt; i=i+3) {
+       vArr[i] = new Bus("Bus" + (i/3+1), true, 25);
+       vArr[i+1] = new Bicycle("Bicycle" + (i/3+1), true, false);
+       vArr[i+2] = new Airplane("Airplane" + (i/3+1), true, 2);
+    }
+    for (Vehicle v : vArr) {
+       System.out.println(v.getName());
+    }
+
+    -----
+
+    상속은 is a
+      ㄴ Bus is a Vehicle
+      ㄴ 아빠는 교체할 수 없음
+      
+    집합은 has a
+      ㄴ 관계를 느슨하게 하려고
+      ㄴ 언제든 교체할 수 있음 : 친구는 맘에 안들면 교체할 수 있음
+    class PC {
+      Monitor mon;
+    }
+
