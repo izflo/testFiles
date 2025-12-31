@@ -145,6 +145,7 @@ public class Parent /*extends Object 생략*/ {
 		ai.setPrice(vv.getPrice() * 30);
 		
 		Vehicle[] vvArr = {bu, bu, bu, bi, bi, bi, bi, bi, ai, ai}; // 전부 다 Vehicle타입
+							ㄴ 계산만을 위한거라 새롭게 객체 생성 하지 않음.
 		
 		int priceSum = 0;
 		for (Vehicle v : vvArr) {
