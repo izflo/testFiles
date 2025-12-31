@@ -1,0 +1,68 @@
+*IAnimal.java
+public interface IAnimal {
+
+	// 숨쉬기 기능
+	public abstract void breath();
+
+	// 먹기 기능
+	public abstract void eat();
+
+	// 움직이기 기능
+	public abstract void move();
+
+	// 배설 기능
+	public abstract void poo();
+
+	// 소리 기능
+	public abstract void sound();
+
+	// 잠자기 기능
+	public abstract void sleep();
+
+}
+
+// Tiger클래스가 IAnimal인터페이스를 구현하려면
+// 6개의 추상메소드를 모두 오버라이딩해서 구현해야함
+// 그런데 Tiger가 eat기능만 사용한다면? => Adapter 추상클래스가 필요
+
+*AnimalAdapter.java
+// 디자인패턴 중에서 Adapter패턴
+// 인터페이스의 모든 추상메소드를 기본구현하는 추상클래스를
+// 인터페이스와 구체클래스 중간에 두는 패턴
+// => 구체클래스는 인터페이스를 직접 구현X
+//		 인터페이스를 기본구현한 추상클래스를 상속 받아서
+//		 원하는 메소드만 오버라이딩 할 수 있음
+
+// IAnimal 인터페이스를 구현하고 모든 추상메소드를 기본 구현하는
+// AnimalAdapter 추상클래스
+
+public abstract class AnimalAdapter implements IAnimal {
+	@Override
+	public void sound() {}
+
+	@Override
+	public void eat() {}
+
+	@Override
+	public void breath() {}
+
+	@Override
+	public void move() {}
+
+	@Override
+	public void poo() {}
+
+	@Override
+	public void sleep() {}
+}
+
+*Tiger.java
+// 어댑터 추상클래스를 상속바다서 원하는 메소드만 오버라이딩함
+public class Tiger extends AnimalAdapter {
+
+	@Override
+	public void eat() {
+		System.out.println("호랑이가 먹는다!");
+	}
+
+}
