@@ -26,6 +26,13 @@ public class Parent /*extends Object 생략*/ {
 
 -----
 
+[오버라이딩]
+- Vehicle bus = new Bus();
+- 타입 일원화
+- Bus는 Vehicle이기도함. Bus는 앞으로 Vehicle 타입으로 부르기로함.
+- Vehicle 타입으로 관리할 수 있으니까. -> 비슷한 애들을 모아두고 관리
+- Bus, Bicyle, Airplane 각각 1000개씩 만드는 게 아니라 Vehicle로 3000개 만들어서 각각 Bus, Bicyle, Airplane을 넣어줌
+- Vehicle로 만들어도 하위에서 동일 메소드에 대해 오버라이딩을 해놓으면 각각 다른 구현을 할 수 있게 만들어줌 -> 다 다른 버스, 자전거, 비행기여도 Vehicle하나로 관리할 수 있음
 - @Override : 오버라이딩한 메소드인지 컴파일타임에 검증하는 어노테이션(annotation)
 
 -----
@@ -96,4 +103,53 @@ public class Parent /*extends Object 생략*/ {
     class PC {
       Monitor mon;
     }
+
+-----
+		// 실습
+		// Vehicle의 기본 요금은 1000원
+		// Bus 요금은 Vehicle 기본 요금의 1.5배
+		// Bicycle 요금은 Vehicle 기본 요금의 0.5배
+		// Airplane 요금은 Vehicle 기본 요금의 30배
+		// 3명이 Bus를 타고 5명이 Bicycle을 타고 2명이 Airplane을
+		// 탄다고 했을 때 총 요금을 연산
+
+[내코드]
+ 		  int passengers = 10;
+	      Vehicle[] v = new Vehicle[passengers];
+	      v[0] = new Bus();
+	      v[1] = new Bus();
+	      v[2] = new Bus();
+	      v[3] = new Bicycle();
+	      v[4] = new Bicycle();
+	      v[5] = new Bicycle();
+	      v[6] = new Bicycle();
+	      v[7] = new Bicycle();
+	      v[8] = new Airplane();
+	      v[9] = new Airplane();
+	      
+	      double sum = 0;
+	      
+	      for(Vehicle vv : v) {
+	    	  sum+= vv.getPrice();
+	      }
+	      System.out.println(sum);
+
+**** 기존 클래스는 최대한 건들이지 않는 게 좋음 / 모듈은 모듈 자체로 냅둬야함 => 모듈화를 위해서 ****
+		Vehicle vv = new Vehicle();		
+		vv.setPrice(1000);
+		Vehicle bu = new Bus();				
+		bu.setPrice((int)(vv.getPrice() * 1.5));
+		Vehicle bi = new Bicycle();			
+		bi.setPrice((int)(vv.getPrice() * 0.5));
+		Vehicle ai = new Airplane();		
+		ai.setPrice(vv.getPrice() * 30);
+		
+		Vehicle[] vvArr = {bu, bu, bu, bi, bi, bi, bi, bi, ai, ai}; // 전부 다 Vehicle타입
+		
+		int priceSum = 0;
+		for (Vehicle v : vvArr) {
+			priceSum += v.getPrice();
+		}
+		
+		System.out.printf("요금 총합 : %d", priceSum);
 
