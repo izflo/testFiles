@@ -4,17 +4,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExRegExp {
-   
-   public static void main(String[] args) {
+
+	public static void main(String[] args) {
       
       // 정규표현식 실습 1
       // 아래 문자열에서 숫자만 남겨서 출력
       String rstr1 = "전화: 010-1234-5678";
-      System.out.println(rstr1.replaceAll("[\\D]", ""));
+      System.out.println(rstr1.replaceAll("\\D", ""));
       
       // 정규표현식 실습 2
       // 아래 문자열을 공백 기준으로 단어들을 분리해서 출력
       String rstr2 = "Java is powerful and simple";
+      String[] rstr2Arr = rstr2.split(" ");
+      for(String s : rstr2Arr) {
+    	  System.out.println(s);
+      }
       
       // 정규표현식 실습 3 (Pattern 사용)
       // 아래 문자열이 Java라는 단어를 포함하고 있는지 출력
@@ -26,18 +30,24 @@ public class ExRegExp {
       // 정규표현식 실습 4
       // 아래 문자열에서 소문자만 제거 후 출력
       String rstr4 = "Java123abcDEF";
+      System.out.println(rstr4.replaceAll("[a-z]", ""));
       
       // 정규표현식 실습 5
       // 아래 문자열이 휴대폰 번호 형식이 맞는지 확인 후 출력
       String rstr5 = "010-1234-5678";
+      Pattern pattern5 = Pattern.compile("01(0|1)-\\d{4}-\\d{4}");
+      Matcher matcher5 = pattern5.matcher(rstr5);
+      System.out.println(matcher5.find() ? "맞음" : "안맞음");
       
       // 정규표현식 실습 6
       // 아래 문자열에서 HTML 태그를 제거 후 출력
       String rstr6 = "<p>Hello<br><b>World</b>";
+      System.out.println(rstr6.replaceAll("<[/]?[a-z]+>", ""));
       
       // 정규표현식 실습 7
       // 아래 문자열에서 여러개의 공백을 하나로 변경 후 출력
       String rstr7 = "Java      is      easy";
+      System.out.println(rstr7.replaceAll("[^\\w]+", " "));
       
       // 정규표현식 실습 8
       // 아래 배열의 문자열들에 모두 매칭되는 전화번호 정규표현식 패턴만들기
@@ -48,6 +58,11 @@ public class ExRegExp {
             "02-1234-5678",
             "031-1234-5678"
       };
+      for(String s : telArr) {
+    	  Pattern pattern8 = Pattern.compile("0[23][1]?-\\d{3,4}-\\d{4}");
+          Matcher matcher8 = pattern8.matcher(s);
+          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+      }
       
       // 정규표현식 실습 9
       // 아래 배열의 문자열들에 모두 매칭되는 주민등록번호 정규표현식 패턴만들기
@@ -58,36 +73,21 @@ public class ExRegExp {
             "001231-4234567",
             "900101-1234567",
             "800101-2234567",
-            "701301-1234567",
-            "601201-5234567"
+            "701301-1234567", // 13월 틀림
+            "601201-5234567" // 남녀구분 5 틀림
       };
+      
+      for(String s : ssnArr) {
+    	  Pattern pattern8 = Pattern.compile("^[0-9][0-9](0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[01])-[1-4][0-9]{6}");
+          Matcher matcher8 = pattern8.matcher(s);
+          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+      }
       
       // 정규표현식 실습 10
       // 아래 문자열의 다양한 날짜 형식들을 "YYYY-MM-DD" 형식으로 출력
       String rstr10 = "오늘은 2025-06-13이고, 작년엔 2024.06.12에 회의를 했고, 다음 회의는 2025/06/15입니다.";
+      System.out.println(rstr10.replaceAll("[./][^.$]", "-"));
       
    } // main
 
 } // class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
