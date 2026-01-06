@@ -1,3 +1,27 @@
+/*
+ * 정규표현식 (Regular Expression)
+ * 정해진 패턴문자열들을 사용해서 문자열내의 문자열을 검색, 치환에 사용되는 표현식
+ * ^ : 문자열의 시작
+ * [^문자열] : 문자열이 아닌 것
+ * $ : 문자열의 끝
+ * . : 임의의 한 문자
+ * * : 문자가 0개 이상 발생
+ * + : 문자가 1개 이상 발생
+ * ? : 문자가 0개 또는 1개 발생
+ * [] : 문자의 집합 범위
+ * {} : 문자열의 반복 회수
+ * | : or
+ * \b : 단어의 경계
+ * \B : 단어가 아닌 것의 경계
+ * \s : 공백문자
+ * \S : 공백문자가 아닌 문자
+ * \w : word (영문대소문자, 숫자, _)
+ * \W : word가 아닌 것
+ * \d : 숫자 = [0-9]
+ * \D : 숫자가 아닌 것
+ * \\ : \문자 자체 
+ */
+
 package api.ex;
 
 import java.util.regex.Matcher;
@@ -6,6 +30,16 @@ import java.util.regex.Pattern;
 public class ExRegExp {
 
 	public static void main(String[] args) {
+		
+		// 패턴 생성
+		// 대소문자 구별없이 a가 0개 이상 나오고 b가 한 개 나오는 패턴
+		Pattern p = Pattern.compile("^a*b$", Pattern.CASE_INSENSITIVE);
+		
+		// 패턴 매칭
+		Matcher m1 = p.matcher("ab"); // Matcher 생성
+		System.out.println(m1.matches()); // true
+		Matcher m2 = p.matcher("bb");
+		System.out.println(m2.matches()); // false
       
       // 정규표현식 실습 1
       // 아래 문자열에서 숫자만 남겨서 출력
@@ -15,7 +49,7 @@ public class ExRegExp {
       // 정규표현식 실습 2
       // 아래 문자열을 공백 기준으로 단어들을 분리해서 출력
       String rstr2 = "Java is powerful and simple";
-      String[] rstr2Arr = rstr2.split(" ");
+      String[] rstr2Arr = rstr2.split(" "); // 또는 \\s+
       for(String s : rstr2Arr) {
     	  System.out.println(s);
       }
@@ -35,19 +69,19 @@ public class ExRegExp {
       // 정규표현식 실습 5
       // 아래 문자열이 휴대폰 번호 형식이 맞는지 확인 후 출력
       String rstr5 = "010-1234-5678";
-      Pattern pattern5 = Pattern.compile("01(0|1)-\\d{4}-\\d{4}");
+      Pattern pattern5 = Pattern.compile("^01(0|1)-\\d{4}-\\d{4}$");
       Matcher matcher5 = pattern5.matcher(rstr5);
       System.out.println(matcher5.find() ? "맞음" : "안맞음");
       
       // 정규표현식 실습 6
       // 아래 문자열에서 HTML 태그를 제거 후 출력
       String rstr6 = "<p>Hello<br><b>World</b>";
-      System.out.println(rstr6.replaceAll("<[/]?[a-z]+>", ""));
+      System.out.println(rstr6.replaceAll("<[/]?[a-z]+>", "")); // 또는 <[^>]*>
       
       // 정규표현식 실습 7
       // 아래 문자열에서 여러개의 공백을 하나로 변경 후 출력
       String rstr7 = "Java      is      easy";
-      System.out.println(rstr7.replaceAll("[^\\w]+", " "));
+      System.out.println(rstr7.replaceAll("\\s+", " "));
       
       // 정규표현식 실습 8
       // 아래 배열의 문자열들에 모두 매칭되는 전화번호 정규표현식 패턴만들기
@@ -59,9 +93,10 @@ public class ExRegExp {
             "031-1234-5678"
       };
       for(String s : telArr) {
-    	  Pattern pattern8 = Pattern.compile("0[23][1]?-\\d{3,4}-\\d{4}");
-          Matcher matcher8 = pattern8.matcher(s);
-          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+//    	  Pattern pattern8 = Pattern.compile("^0[23]1?-\\d{3,4}-\\d{4}$");
+//          Matcher matcher8 = pattern8.matcher(s);
+//          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+    	  System.out.println(s.matches("^0[23]1?-\\d{3,4}-\\d{4}$"));
       }
       
       // 정규표현식 실습 9
@@ -78,15 +113,23 @@ public class ExRegExp {
       };
       
       for(String s : ssnArr) {
-    	  Pattern pattern8 = Pattern.compile("^[0-9][0-9](0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[01])-[1-4][0-9]{6}");
-          Matcher matcher8 = pattern8.matcher(s);
-          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+//    	  Pattern pattern8 = Pattern.compile("^[0-9][0-9](0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[01])-[1-4][0-9]{6}");
+//          Matcher matcher8 = pattern8.matcher(s);
+//          System.out.println(matcher8.find() ? "맞음" : "안맞음");
+          System.out.println(s.matches("^[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[01])-[1-4][0-9]{6}$"));
       }
       
       // 정규표현식 실습 10
       // 아래 문자열의 다양한 날짜 형식들을 "YYYY-MM-DD" 형식으로 출력
       String rstr10 = "오늘은 2025-06-13이고, 작년엔 2024.06.12에 회의를 했고, 다음 회의는 2025/06/15입니다.";
       System.out.println(rstr10.replaceAll("[./][^.$]", "-"));
+      
+      String repStr = rstr10.replaceAll("[./]", "-");
+      Pattern pattern10 = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+      Matcher matcher10 = pattern10.matcher(repStr);
+      while(matcher10.find()) { // 패턴에 일치하는 문자열이 있는 동안 반복
+    	  System.out.println(matcher10.group()); // 각 매칭된 그룹을 출력
+      }
       
    } // main
 
