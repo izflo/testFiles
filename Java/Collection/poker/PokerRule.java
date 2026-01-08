@@ -1,95 +1,49 @@
 package collection.ex.poker;
 
+import java.util.Map;
+
 public class PokerRule {
 	public void isRoyalStraightFlush(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[로열스트레이트플러시]");
+		printResult("[로열스트레이트플러시]", p);
 	}
 
 	public void isStraightFlush(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[스트레이트플러시]");
+		printResult("[스트레이트플러시]", p);
 	}
 
 	public void isFourCard(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[포카드]");
+		printResult("[포카드]", p);
 	}
 
 	public void isFullHouse(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[풀하우스]");
+		printResult("[풀하우스]", p);
 	}
 
 	public void isFlush(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[플러시]");
+		printResult("[플러시]", p);
 	}
 
 	public void isTriple(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[트리플]");
+		printResult("[트리플]", p);
 	}
 
 	public void isTwoPair(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[투페어]");
+		printResult("[투페어]", p);
 	}
 
 	public void isOnePair(Player p) {
-		// 플레이어의 cardList 정보 가져와서
-
-		// 조건 here
-
-		// 조건에 맞으면 출력
-		System.out.println(p);
-		System.out.println("[원페어]");
+		printResult("[원페어]", p);
 	}
 
 	// 족보없음은 else에서 처리
 	public void isNone(Player p) {
-		// 플레이어의 cardList 정보 가져와서
+		printResult("[족보 없음]", p);
+	}
 
-		// 조건 here
-
-		// 조건에 맞으면 출력
+	public static void printResult(String mention, Player p) {
 		System.out.println(p);
-		System.out.println("[족보 없음]");
+		System.out.println(mention);
+		System.out.println();
 	}
 
 }

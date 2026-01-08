@@ -38,16 +38,31 @@ public class Player {
 	}
 
 	public Map<Integer, Integer> getNumCountMap() {
+		numCountMap = cardList.stream()
+				.collect(Collectors.groupingBy(
+						Card::getNum,
+						Collectors.collectingAndThen(
+								Collectors.counting(), Long::intValue
+								)
+						));
+		//key값은 2부터 14까지 다 출력 
 		return numCountMap;
 	}
 
 	public Map<String, Integer> getShapeCountMap() {
+		shapeCountMap = cardList.stream()
+				.collect(Collectors.groupingBy(
+						Card::getShape,
+						Collectors.collectingAndThen(
+								Collectors.counting(), Long::intValue
+								)
+						));
 		return shapeCountMap;
 	}
 
 	@Override
 	public String toString() {
-		return name + cardList + "\n" + getNumCountMap() + "\n" + getShapeCountMap() + "\n";
+		return name + cardList + "\n" + getShapeCountMap() + "\n" + getNumCountMap();
 	}
 
 }
