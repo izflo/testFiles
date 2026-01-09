@@ -1,6 +1,6 @@
 package collection.ex.poker;
 
-import java.util.Map;
+import java.util.List;
 
 public class PokerRule {
 	public void isRoyalStraightFlush(Player p) {

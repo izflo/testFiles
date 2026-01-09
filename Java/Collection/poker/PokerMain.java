@@ -22,9 +22,8 @@ public class PokerMain {
 		// 4. 카드를 52장 만들고 섞는다.
 		// 카드를 7장씩 플레이어에게 나눠준다.
 		List<Player> playerList = startGame();
+		
 		playerList.forEach(p -> printResult(p));
-
-		// ♠ ◆ ♥ ♣
 
 	}// main
 
@@ -32,15 +31,12 @@ public class PokerMain {
 		List<Player> playerList = createPlayers(); // 플레이어를 5명 만든다.
 		List<Card> mainCardList = createCard(); // 52장의 카드를 저장할 배열
 
-		// stream에서 limit(7)를 toList해서 new Player(stream구문)
-		// Player(String name, List<Card> cardList)
-		// cardList : mainCardList.stream().limit(7).collect(Collectors.toList())
-		// 사용자에게 주어지는 카드는 중복되면 안됨.
 		int countCard = 7; // 사용자마다 다른 카드를 배정해주기 위해
 		for (int i = 0; i < playerList.size(); i++) {
 			playerList.get(i).setCardList(
 					mainCardList.stream().skip((long) i * countCard).limit(7).collect(Collectors.toList()));
 		}
+		
 		return playerList;
 	}//startGame
 
@@ -62,8 +58,13 @@ public class PokerMain {
 	private static List<Player> createPlayers() {
 		// Arrats.asList는 고정길이 리스트를 생성하므로
 		// 그러므로 가변길이 리스트를 생성하려면 new ArrayList생성자 인자로 고정길이 리스트를 줘야함
-		return new ArrayList<Player>(Arrays.asList(new Player("홍길동"), new Player("이순신"), new Player("최영"),
-				new Player("강감찬"), new Player("권율")));// playerList
+		return new ArrayList<Player>(Arrays.asList(
+				new Player("홍길동"), 
+				new Player("이순신"), 
+				new Player("최영"),
+				new Player("강감찬"), 
+				new Player("권율")
+				));
 
 	}// createPlayers
 
@@ -87,19 +88,73 @@ public class PokerMain {
 		int fourSameNumCnt = (int)countNumList.stream().filter(i->i==4).count(); //동 일 한 숫 자 4 개
 		int fiveSameShapeCnt = (int)countShapeList.stream().filter(i->i==5).count(); //동 일 한 무 늬 5 개
 		
-//		List<Integer> straightFlush = numList.keySet().stream().toList();
-//		for(int i=0;i<straightFlush.size(); i++) {
-//			
-//		}
-//		straightFlush.stream().max();
+		boolean isSF = false;
+		List<Integer> straightFlush = numList.keySet().stream().toList();
+		
+		if(straightFlush.size() < 5) isSF=false; // 길이가 5보다 작으면 해당 X
+		else { //  if(straightFlush.size()>=5) // 길이가 5보다 크면
+			int max =straightFlush.stream().mapToInt(Integer::intValue).max().orElse(0);
+			int min =straightFlush.stream().mapToInt(Integer::intValue).min().orElse(0);
+			
+			if(straightFlush.size()==5 && max-min==4) isSF=true; //연속된 5개의 숫자
+			else {
+				// 숫자가 섞여있는 상태에서는 연속된 숫자의 시작이 어떤거인지 알 수가 없음.
+				// min부터 위로 5개 찾아서 연속된거 있는지 찾거나
+				// max부터 아래로 5개 찾아서 연속된거 있는지 찾기
+				// while(isSF) min+1해서 찾았는데 값이 있다? min++ found++ 또 찾아서 값이 있다? -> 4번 반복 -> found가 4면 5개 연속
+				// min+1해서 찾았는데 값이 없다? isSF=false 
+				// min-1해서 찾았는데 값이 있다? min-- found++ 또 찾아서 값이 있다? -> 4번 반복 -> found가 4면 5개 연속
+				// min-1해서 찾았는데 값이 없다? isSF=false
+				
+				
+				
+				
+				List<Integer> maxList = new ArrayList<Integer>(); // 최대값부터 탐색할 리스트
+				List<Integer> minList = new ArrayList<Integer>(); // 최소값부터 탐색할 리스트
+				for(int i=0; i<5; i++) {
+					maxList.add(max-i);
+					minList.add(min+i);
+				}
+				// 최대값부터 찾은 개수
+				long maxCnt = straightFlush.stream().filter(n-> maxList.contains(n)).count();
+				long minCnt = straightFlush.stream().filter(n-> minList.contains(n)).count();
+				if(maxCnt==5 || minCnt==5) isSF=true; // 찾음
+				
+				
+				
+				
+				
+				
+				
+				
+//				int found = 0;
+				//최대값부터 찾기
+//				while(!isSF && found<4) {
+//					 // 람다식 내부에서 외부 변수를 사용할 때, 그 변수가 final이어야해서.
+//					// 최대값에서 찾은 수만큼 빼면 그만큼 연속된 수가 되니까
+//					final int tempMax = max-1-found;
+//					if(straightFlush.stream().anyMatch(n-> n==tempMax)) found++; // 연속된 값 찾음	
+//					else break; // while문 빠져나감. 연속된 숫자를 찾지 못했기 때문.
+//				}
+//				if(found==4) isSF=true; // 찾음
+//				else found=0; // 못찾으면 초기화
+//
+//				while(!isSF && found<4) {
+//					final int tempMin = min+1+found;
+//					if(straightFlush.stream().anyMatch(n-> n==tempMin)) found++; // 연속된 값 찾음
+//					else break;
+//				}
+//				if(found==4) isSF=true;
+			}
+		}
 		
 		//1 등 ) 로 열 스 트 레 이 트 플 러 시 - 같 은 무 늬 5 개 의 숫 자 가 1 0 , J , Q , K , A
 		if (fiveSameShapeCnt==1) {
-			if(numList.keySet().stream().filter(k->k>=10&&k<=14).count()==5) {
+			if(numList.keySet().stream().filter(k -> k>=10).count()==5) {
 				pp.isRoyalStraightFlush(p);
 			}
 			//2 등 ) 스 트 레 이 트 플 러 시 - 로 열 스 트 레 이 트 플 러 시 를 제 외 하 고 같 은 무 늬 5 개 가 연 속 된 숫 ****조건 수정!
-			else if(false){ // 조건문: 연속된 숫자 판별 numList.keySet().stream()
+			else if(isSF){ // 조건문: 연속된 숫자 
 				pp.isStraightFlush(p);
 			}
 			//플 러 시 - 동 일 한 무 늬 5 개
@@ -111,14 +166,15 @@ public class PokerMain {
 		else if (fourSameNumCnt==1) {
 			pp.isFourCard(p);
 		}
-		//4등 풀 하 우 스 - 동 일 한 숫 자 3 개 , 2 개
-		else if (threeSameNumCnt==1
-				&& twoSameNumCnt==1) {
-			pp.isFullHouse(p);
-		}
-		//트 리 플 - 동 일 한 숫 자 3 개
 		else if (threeSameNumCnt==1) {
-			pp.isTriple(p);
+			//4등 풀 하 우 스 - 동 일 한 숫 자 3 개 , 2 개
+			if(twoSameNumCnt==1 ) {
+				pp.isFullHouse(p);	
+			}
+			//트 리 플 - 동 일 한 숫 자 3 개
+			else {
+				pp.isTriple(p);
+			}
 		}
 		//투페어 : 투 페 어 - 동 일 한 숫 자 2 개 , 2 개
 		else if (twoSameNumCnt==2) {

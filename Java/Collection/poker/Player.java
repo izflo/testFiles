@@ -62,7 +62,7 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return name + cardList + "\n" + getShapeCountMap() + "\n" + getNumCountMap();
+		return name + " " + cardList + "\n" + getShapeCountMap() + "\n" + getNumCountMap();
 	}
 
 }
