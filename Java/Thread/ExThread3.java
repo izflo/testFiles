@@ -1,6 +1,9 @@
 package thread.ex;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Scanner;
 
 public class ExThread3 {
@@ -12,13 +15,8 @@ public class ExThread3 {
 
 		// inputstring.log파일 생성
 		// FileOutputStream(file)
-		
-		Scanner sc = new Scanner(System.in);
-		File file = new File("D:/pub2511/files/inputstring.log");
-		
-		while(sc.hasNextLine()) {
-			new LogThread(sc.nextLine(), file).start();
-		}
+
+		new LogThread().start();
 
 	}// main
 

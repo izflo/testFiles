@@ -7,19 +7,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 public class LogThread extends Thread {
 	// 문자열(nextLine())을 입력받을 때마다 inputstring.log파일에 날짜시간과 함께 출력
 	// ex) [2024/11/24 09:00:00] 안녕하세요!
 
 	// 날짜 포맷 생성 + 안녕하세요! -> 객체로 넘기기?
-	// long endTime = System.currentTimeMillis();
 
 	private String text;
 	private File file;
-	private DataOutputStream dos = null;
+	private DataOutputStream dos;
 
 	public LogThread() {
+		this.file = new File("/Users/yeji/eclipse-workspace/코딩 테스트/filesinputstring.log");
+		try {
+			this.dos = new DataOutputStream(new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public LogThread(String text) {
@@ -51,31 +57,35 @@ public class LogThread extends Thread {
 
 	@Override
 	public void run() {
-		
+
+		Scanner sc = new Scanner(System.in);
+//		File file = new File("D:/pub2511/files/inputstring.log");
 		SimpleDateFormat sdf = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss]"); // 날짜 포맷
-		String dateStr = sdf.format(new Date()); // 생성된 날짜
-		String logText = text; // 입력받은 문자열
-		
-		try {
-			dos= new DataOutputStream(new FileOutputStream(file));
-			
-			dos.writeUTF(dateStr);
-			dos.writeUTF(logText);
-			dos.flush();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+
+		while (sc.hasNextLine()) {
+
+			String dateStr = sdf.format(new Date()); // 생성된 날짜
+			String text = sc.nextLine();
+
 			try {
-				dos.close();
-			} catch (IOException e2) {
-				e2.printStackTrace();
+
+				dos.writeUTF(dateStr);
+				dos.writeUTF(text);
+//				dos.flush();
+
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
-		
-		
-		
+		try {
+			dos.close();
+			sc.close();
+			Thread.interrupted();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+			System.exit(0);
+		}
 
 	}
 
