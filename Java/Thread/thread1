@@ -1,0 +1,49 @@
+[Account2]
+//withdraw와 deposit이 this.money(같은 자원)를 공유
+//동기화 안 하면 계좌잔액이 0이 안 나옴. (무조건 0이 나와야함.)
+//출금에 대한 동기화 메소드
+public synchronized void withdraw() {
+  this.setMoney(this.getMoney() - 500);
+}
+
+// 입금에 대한 동기화 메소드
+public synchronized void deposit() {
+  this.setMoney(this.getMoney() + 500);
+}
+
+
+
+
+
+[HongThread2]
+// 공용 자원에 대해 동기화 메소드 사용 (메소드내의 모든 객체에 대해 동기화됨)
+// 객체 여러개 동기화
+// hongAccount2.withdraw();
+
+// 공용 자원에 대해 동기화 블럭 사용 (블럭내에서는 hongAccount2 객체에 대해 동기화됨)
+// 객체 하나만 동기화할 때
+synchronized (hongAccount2) {
+  hongAccount2.setMoney(hongAccount2.getMoney()-500);
+}
+			
+
+
+
+
+[ThreadTest4]
+//공용 계좌 생성
+Account2 account2 = new Account2("커플계좌", 0);
+
+// HongThread2와 KangThread2가 같은 Account2를 가지게 됨 (같은 자원 공유)
+// 홍이 500원 10번 넣고 강이 500원 10번 빼면 최종 계좌가 0이 나와야하는데
+// 동기화 안 하면 0이 안 나옴. -> ERROR!!!
+new HongThread2(account2).start();
+new KangThread2(account2).start();
+
+try {
+  Thread.sleep(1000); // > 위의 Thread 실행 한 다음
+} catch (InterruptedException e) {
+  e.printStackTrace();
+}
+
+System.out.println("최종 계좌 잔액 : "+account2.getMoney());
