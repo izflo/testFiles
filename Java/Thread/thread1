@@ -18,12 +18,12 @@ public synchronized void deposit() {
 [HongThread2]
 // 공용 자원에 대해 동기화 메소드 사용 (메소드내의 모든 객체에 대해 동기화됨)
 // 객체 여러개 동기화
-// hongAccount2.withdraw();
+// hongAccount2.withdraw(); -> Account2에서 synchronized된 메소드를 사용하거나
 
 // 공용 자원에 대해 동기화 블럭 사용 (블럭내에서는 hongAccount2 객체에 대해 동기화됨)
 // 객체 하나만 동기화할 때
 synchronized (hongAccount2) {
-  hongAccount2.setMoney(hongAccount2.getMoney()-500);
+  hongAccount2.setMoney(hongAccount2.getMoney()-500); // 여기서 synchronized 블럭 안에서 바로 접근해서 사용하거나
 }
 			
 
