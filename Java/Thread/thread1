@@ -100,3 +100,18 @@ public class Product {
 	}
 }
 
+
+
+
+[interrupt()]
+try {
+	// Thread를 종료하는 가장 좋은 방법은 조건에 따라
+	// Thread를 interrupt > InterruptedException에서 처리
+	if(i==10) this.interrupt();
+	Thread.sleep(2000); // interrupt된 후에는 sleep에서 Exception이 실행됨
+} catch (InterruptedException e) {
+	System.out.println("### EvenThread 종료됨!"); //-> OddThread도 같이 종료됨
+	System.exit(0); // 정상 종료
+	e.printStackTrace();
+}
+
