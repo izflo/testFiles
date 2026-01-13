@@ -47,3 +47,56 @@ try {
 }
 
 System.out.println("최종 계좌 잔액 : "+account2.getMoney());
+
+
+
+
+[Product]
+
+/*
+	Producer/Consumer 패턴 : 생산자는 생산만 하고 소비자는 소비만 하는 패턴
+	생산과 소비가 순차적으로 일어남
+ */
+
+package thread;
+
+public class Product {
+
+	private String product; // 제품명
+
+	// 제품을 생산하는 메소드
+	public synchronized void produce(String product) {
+		//이미 생산됐을 때
+		while (this.product != null) {
+			try {
+				//나 만들었으니까 이제 consume아 너가 소비해
+				wait(); //notify 불릴 때까지 (제품이 소비될 때까지) 대기 
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} // while
+		
+		this.product = product;
+		System.out.println("제품 생산 : " + product);
+		notify(); // consume한테 제품을 소비하라고 알림
+	}
+
+	// 제품을 소비하는 메소드
+	public synchronized String consume() {
+		//이미 소비됐을 때
+		while (this.product == null) {
+			try {
+				wait(); // notify 불릴 때까지 (생산할 때까지) 대기
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} // while
+		
+		String result = this.product;
+		this.product = null;
+		System.out.println("제품 소비 : " + result);
+		notify(); // produce한테 제품을 생산하라고 알림
+		return result;
+	}
+}
+
