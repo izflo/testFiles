@@ -14,12 +14,12 @@ public class EXIO2 {
 		// scanner를 통해 파일명과 문자열을 입력받아 입력받은 파일명.txt 파일에 문자열 저장
 		Scanner sc = new Scanner(System.in);
 		Writer fw = null;
-		Reader fr = null;
 
 		System.out.println("파일명과 내용을 입력하세요");
-		File file = new File("D:/pub2511/files/" + sc.nextLine().trim() + ".txt");
 		
 		try {
+			File file = new File("D:/pub2511/files/" + sc.nextLine().trim() + ".txt");
+
 			fw = new FileWriter(file);
 			
 			fw.write(sc.nextLine());
@@ -29,10 +29,10 @@ public class EXIO2 {
 		} finally {
 			try {
 				fw.close();
+				sc.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			sc.close();
 		}
 
 

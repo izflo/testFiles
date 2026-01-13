@@ -16,7 +16,6 @@ public class ExCharStream {
 
 		//'name.txt'파일 생성, 파일에 본인 이름 쓰고 읽어서 출력
 		//파일 생성
-		//이름 입력받기
 		//파일에 저장.
 		//파일에서 출력하기
 		InputStream is = null;
@@ -24,14 +23,8 @@ public class ExCharStream {
 		Writer fw = null;
 		Reader fr = null;
 		
-		File file = new File("D:/pub2511/files/name.txt");
 		try {
-			file.createNewFile(); // 파일 생성
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		
-		try {
+			File file = new File("D:/pub2511/files/name.txt");
 			
 			fw = new FileWriter(file);
 			fw.write("김예지");
@@ -40,6 +33,11 @@ public class ExCharStream {
 			fr = new FileReader(file);
 			char[] name = new char[3];
 			fr.read(name	);
+			
+//			int i=0;
+//			while((i=fr.read()) > -1) {
+//				System.out.println((char)i);
+//			}
 			
 			System.out.println(name);
 			

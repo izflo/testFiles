@@ -2,10 +2,8 @@ package io.ex;
 
 import java.io.Serializable;
 
-public class Student implements Serializable {
+public class Student{
 
-	private static final long serialVersionUID = 923847293844829839L;
-	private transient String ssn; // ssn이 어떤 값을 가지던지 String타입의 기본값인 null로 직렬화 됨
 	private String name;
 	private Score score;
 

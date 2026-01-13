@@ -2,7 +2,7 @@ package io.ex;
 
 import java.io.Serializable;
 
-public class Score implements Serializable {
+public class Score {
 
 	private int kor;
 	private int eng;
