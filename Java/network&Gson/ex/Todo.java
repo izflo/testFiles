@@ -14,6 +14,14 @@ public class Todo implements Serializable {
 	public Todo() {
 	}
 
+	public Todo(int userId, int id, String title, boolean completed) {
+		super();
+		this.userId = userId;
+		this.id = id;
+		this.title = title;
+		this.completed = completed;
+	}
+
 	public int getUserId() {
 		return userId;
 	}
@@ -46,12 +54,9 @@ public class Todo implements Serializable {
 		this.completed = completed;
 	}
 
-	public Todo(int userId, int id, String title, boolean completed) {
-		super();
-		this.userId = userId;
-		this.id = id;
-		this.title = title;
-		this.completed = completed;
+	@Override
+	public String toString() {
+		return "Todo [userId=" + userId + ", id=" + id + ", title=" + title + ", completed=" + completed + "]";
 	}
 
 }

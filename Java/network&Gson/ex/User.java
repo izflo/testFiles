@@ -10,7 +10,7 @@ public class User implements Serializable {
 	private String name;
 	private String username;
 	private String email;
-	private Address address; 
+	private Address address;
 	private String phone;
 	private String website;
 	private Company company;
@@ -135,6 +135,11 @@ public class User implements Serializable {
 			this.bs = bs;
 		}
 
+		@Override
+		public String toString() {
+			return "Company [name=" + name + ", catchPhrase=" + catchPhrase + ", bs=" + bs + "]";
+		}
+
 	}
 
 	// address의 중첩객체
@@ -197,6 +202,11 @@ public class User implements Serializable {
 			this.geo = geo;
 		}
 
+		@Override
+		public String toString() {
+			return "Address [" + street + suite + city + zipcode + geo + "]";
+		}
+
 	}
 
 	// geo의 중첩객체
@@ -229,6 +239,17 @@ public class User implements Serializable {
 			this.lng = lng;
 		}
 
+		@Override
+		public String toString() {
+			return "(" + lat + "," + lng + ")";
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", username=" + username + ", email=" + email + ", address="
+				+ address + ", phone=" + phone + ", website=" + website + ", company=" + company + "]";
 	}
 
 }
