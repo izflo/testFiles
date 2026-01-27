@@ -1,0 +1,54 @@
+-- 1. JOBS테이블의 모든 행을 조회할 수 있는 커서를 만들고 모든 행의 정보를 출력
+DECLARE
+	CURSOR CUR_JOBS IS SELECT * FROM JOBS;
+	V_JOBS_ROW JOBS%ROWTYPE;
+BEGIN
+	 FOR V_JOBS_ROW IN CUR_JOBS
+ 	 LOOP
+        PL('직무아이디 : '||V_JOBS_ROW.JOB_ID);
+     END LOOP;
+END;
+
+-- 2. 부서아이디가 50 이하인 모든 행을 조회할 수 있는 커서를 만들고 모든 행의 정보를 출력
+DECLARE
+	CURSOR CUR_DEPT IS SELECT * FROM DEPARTMENTS WHERE DEPARTMENT_ID <= 50;
+	V_DEPT_ROW DEPARTMENTS%ROWTYPE;
+BEGIN
+	FOR V_DEPT_ROW IN CUR_DEPT
+	LOOP
+		PL('부서아이디 : '||V_DEPT_ROW.DEPARTMENT_ID);
+		PL('부서명 : '||V_DEPT_ROW.DEPARTMENT_NAME);
+	END LOOP;
+END;
+
+
+-- 3. 월급이 전체 직원의 평균월급보다 적은 직원의 아이디와 풀네임을 조회할 수 있는 커서를 만들어 출력
+-- 평균 월급 구하는 공식은?
+DECLARE
+	-- 전체 직원들의 월급을 읽는 커서
+	CURSOR CUR_EMP IS 
+		SELECT * FROM EMPLOYEES
+		WHERE SALARY < (SELECT AVG(NVL(SALARY,0)) FROM EMPLOYEES);
+	FULLNAME VARCHAR2(46);
+BEGIN
+	FOR V_EMP_ROW IN CUR_EMP
+	LOOP
+			FULLNAME := V_EMP_ROW.FIRST_NAME||' '||V_EMP_ROW.LAST_NAME;
+			PL(V_EMP_ROW.EMPLOYEE_ID || ' ' || FULLNAME);
+	END LOOP;
+END;
+
+-- 4. REGION_ID를 입력하면 소속 국가들의 모든 정보를 조회할 수 있는 커서를 만들어 출력
+DECLARE
+	
+BEGIN
+	
+END;
+
+-- 5. 직원아이디를 입력하면 직원과 같은 부서에 근무하는 직원의 직원아이디, 풀네임, 월급을
+--     조회할 수 있는 커서를 만들어 출력
+DECLARE
+	
+BEGIN
+	
+END;
