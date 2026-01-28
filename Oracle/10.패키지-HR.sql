@@ -72,7 +72,7 @@ IS
 	)
 	IS
 	BEGIN
-		P_SUM := P_NUM1+P_NUM2;
+		P_SUM := P_NUM1 + P_NUM2;
 	END;
 		
 	-- 함수 구현
