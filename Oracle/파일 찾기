@@ -1,0 +1,13 @@
+JDBCTest1.java(java랑 오라클이랑 연결) > PERSON.sql > ConnectionUtil.java(java랑 db랑 연결하기 위한 클래스. 매번 같은 코드 쓰지 않으려고) >
+JDBCTest2.java(statement: 잘 안씀) > 
+JDBCTest3.java(PreparedStatement 많이 씀) > 
+JDBCTest4.java(CallableStatement 함수/프로시저 호출) > 
+JDBCTest5.java(gson 연동) > Person.java (serializable) json에 매핑할 객체 (person table과 person class 매핑) >
+JDBCTest6.java(트랜잭션: 둘 다 되거나(commit) 둘 다 안되거나(rollback))
+JDBCTest7.java
+
+
+try-catch로 close()해줘야하는 객체는 main 밖에다가 선언해주기
+
+[todo]
+JDBC-TODO.SQL > todo.java > todomain.java
